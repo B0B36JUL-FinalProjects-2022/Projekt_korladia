@@ -1,0 +1,7 @@
+name = "FinalProject"
+uuid = "1f1b0053-d7dd-4c9c-92dc-344e1bb063d0"
+authors = ["Diana Korladinova"]
+version = "0.1.0"
+
+[compat]
+julia = "1.8"
