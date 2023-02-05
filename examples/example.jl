@@ -35,8 +35,6 @@ X_trn_1 = reshape(x_trn, 1, size(x_trn)[1])
 X_tst_2 = vcat(x_tst',y_tst')
 X_tst_1 = reshape(x_tst, 1, size(x_tst)[1])
 
-## Logistic regression
-
 # Prepare the data
 X_trn_1 = add_padding(X_trn_1, position="under")
 X_trn_2 = add_padding(X_trn_2)
@@ -44,6 +42,8 @@ lbls_trn = flip_lbls(lbls_trn)
 X_tst_1 = add_padding(X_tst_1, position="under")
 X_tst_2 = add_padding(X_tst_2)
 lbls_tst = flip_lbls(lbls_tst)
+
+## Logistic regression
 
 # Compute logistic loss and its gradient
 X = [1 1 1 ; 1 2 3]
@@ -75,7 +75,6 @@ y = [1,1,1,0,0,0]
 X_n = add_padding(X)
 y_n = flip_lbls(y)
 alpha = kozinec(X_n,y_n)
-v = perceptron(X_n, y_n)
 
 separ(x::Real, alpha) = (-alpha[3]-alpha[1]*x)/alpha[2]
 xlims = extrema(X[1,:]) .+ [-0.1, 0.1]
@@ -93,17 +92,17 @@ res_lbl2 = classification(X_tst_1, alpha, "kozinec")
 err2 = compute_error(res_lbl2, lbls_tst)
 err3 = compute_error(classification(X_trn_1, alpha, "kozinec"), lbls_trn)
 
-v = perceptron(X_trn_1, lbls_trn)
+v = kozinec(X_trn_1, lbls_trn, alg = Perceptron())
 res_lbl2 = classification(X_tst_1, v, "kozinec")
 println(lbls_tst)
 println(res_lbl2)
 err2 = compute_error(res_lbl2, lbls_tst)
 
-X1 = [1 1.5 2 ; 1 0 1]
-lbls1 = ones(size(X1)[2])
-X2 = [-3 -2 ; 0 -1]
-lbls2 = ones(size(X2)[2])*2
-X3 = [-2 -1.5 ; 4 5.5]
-lbls3 = ones(size(X3)[2])*3
-X = hcat(X1,X2,X3)
-y = hcat(lbls1', lbls2', lbls3')
+# X1 = [1 1.5 2 ; 1 0 1]
+# lbls1 = ones(size(X1)[2])
+# X2 = [-3 -2 ; 0 -1]
+# lbls2 = ones(size(X2)[2])*2
+# X3 = [-2 -1.5 ; 4 5.5]
+# lbls3 = ones(size(X3)[2])*3
+# X = hcat(X1,X2,X3)
+# y = hcat(lbls1', lbls2', lbls3')
