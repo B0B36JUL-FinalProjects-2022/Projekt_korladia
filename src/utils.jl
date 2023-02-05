@@ -3,8 +3,8 @@ using Plots
 export get_data, classification, compute_error, create_plot
 
 # Load data
-function get_data()
-    labels, images = npzread("/home/dianka/Documents/School/JUL/data_33rpz_03_minimax.npz", ["images_test", "labels_test"])
+function get_data(path::String)
+    labels, images = npzread(path, ["images_test", "labels_test"])
     # We need the second element of the Pair labels
     labels = labels[2]
     # Get the images from the Pair as an array

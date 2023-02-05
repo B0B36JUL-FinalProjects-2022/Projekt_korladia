@@ -3,7 +3,7 @@ using FinalProject
 using Plots
 
 # Load the input data
-labels, images = get_data()
+labels, images = get_data("data/data_alphabet.npz")
 
 # Get all images with the label 7
 r = images[:,:,labels .== 0x00]
