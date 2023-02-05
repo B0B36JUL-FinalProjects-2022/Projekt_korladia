@@ -45,8 +45,5 @@ function logistic_loss_gradient_descent(X::Matrix, y::Vector, w_init::Vector; ep
         end
         iter -= 1
     end
-    if iter == 0
-        println("No more iterations")
-    end
     return w, wt', Et
 end
