@@ -16,8 +16,10 @@ second_half(::TopBottom, images::Array) = sum(sum(images, dims=2)[Int((size(imag
 # Compute features
 function compute_measurements(images::Array; meas_type::MeasurementType = LeftRight())
     one_half = first_half(meas_type, images)
-    other_half = second_half(meas_type, images)
+    other_half = second_half(meas_type, images)    
     x = vec(one_half .- other_half)
+    print(x)
+    println(std(x), mean(x))
     # Normalize
     x = (1/std(x)) .* (x .- mean(x))
     return x

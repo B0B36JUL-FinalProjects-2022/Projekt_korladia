@@ -70,11 +70,11 @@ err = compute_error(res_lbl, lbls_tst)
 ## Kozinec
 
 # Test on arbitrary data
-X = [3 4 5 -1 -1.5 -3 ; 1 0 1 -2 -1 -1.5]
-y = [1,1,1,0,0,0]
+X = [1 0 2; 0 1 1]
+y = [0, 0, 1]
 X_n = add_padding(X)
 y_n = flip_lbls(y)
-alpha = kozinec(X_n,y_n)
+alpha = kozinec(X_n,y_n,alg=Perceptron())
 
 separ(x::Real, alpha) = (-alpha[3]-alpha[1]*x)/alpha[2]
 xlims = extrema(X[1,:]) .+ [-0.1, 0.1]
