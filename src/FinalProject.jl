@@ -1,5 +1,6 @@
 module FinalProject
-
-# Write your package code here.
-
+include("data_prep.jl")
+include("logreg.jl")
+include("utils.jl")
+include("kozinec.jl")
 end
