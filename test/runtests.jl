@@ -34,18 +34,20 @@ end
 end
 
 @testset "data_prep.jl" begin
-    imgs = [1 2 3; 4 5 6;;; 7 8 9; 0 0 0 ;;; 7 7 7; 1 1 1 ;;; 5 5 5; 4 4 4]
+    imgs = [1 1 1; 5 5 5;;; 2 2 2; 4 4 4 ;;; 7 7 7; 1 1 1 ;;; 2 2 2; 4 4 4]
     lbls = [1, 1, 2, 2]
     letter_count = [2, 2]
-    imgs1 = [7 8 9; 0 0 0;;; 5 5 5; 4 4 4]   
-    imgs2 = [1 2 3; 4 5 6;;; 7 7 7; 1 1 1]
+    imgs1 = [2 2 2; 4 4 4 ;;; 2 2 2; 4 4 4]   
+    imgs2 = [1 1 1; 5 5 5;;; 7 7 7; 1 1 1]
     lbls_n = [1, 2]     
     lbls_flp = [1,1,-1,-1]
     img3 = [1 2 3; 4 5 6]
     img3_u = [1 2 3; 4 5 6; 1 1 1]
     img3_o = [1 1 1; 1 2 3; 4 5 6]
+    lr = [0.5, 0.5, -1.5, 0.5]
     @test crossval(imgs, lbls, letter_count) == (imgs1,lbls_n,imgs2,lbls_n)
     @test flip_lbls(lbls) == lbls_flp
     @test add_padding(img3) == img3_u
     @test add_padding(img3, position = "over") == img3_o
+    @test compute_measurements(imgs) == lr
 end
