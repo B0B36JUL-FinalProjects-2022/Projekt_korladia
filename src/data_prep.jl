@@ -3,17 +3,15 @@ using Statistics
 export compute_measurements, create_work_set, crossval, flip_lbls, add_padding
 export MeasurementType, LeftRight, TopBottom
 
-
-
 abstract type MeasurementType end
 
 struct LeftRight <: MeasurementType end
 struct TopBottom <: MeasurementType end
 
-first_half(::LeftRight, images) = sum(sum(images, dims=1)[:, 1:Int(size(images)[2] ÷ 2), :], dims=2)
-first_half(::TopBottom, images) = sum(sum(images, dims=2)[1:Int(size(images)[1] ÷ 2), :, :], dims=1)
-second_half(::LeftRight, images) = sum(sum(images, dims=1)[:, Int(size(images)[2] ÷ 2) + 1:end, :], dims=2)
-second_half(::TopBottom, images) = sum(sum(images, dims=2)[Int((size(images)[1] ÷ 2)) + 1 : end, :, :], dims=1)
+first_half(::LeftRight, images::Array) = sum(sum(images, dims=1)[:, 1:Int(size(images)[2] ÷ 2), :], dims=2)
+first_half(::TopBottom, images::Array) = sum(sum(images, dims=2)[1:Int(size(images)[1] ÷ 2), :, :], dims=1)
+second_half(::LeftRight, images::Array) = sum(sum(images, dims=1)[:, Int(size(images)[2] ÷ 2) + 1:end, :], dims=2)
+second_half(::TopBottom, images::Array) = sum(sum(images, dims=2)[Int((size(images)[1] ÷ 2)) + 1 : end, :, :], dims=1)
 
 # Compute features
 function compute_measurements(images::Array; meas_type::MeasurementType = LeftRight())
