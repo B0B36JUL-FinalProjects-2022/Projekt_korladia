@@ -17,15 +17,18 @@ second_half(::TopBottom, images::Array) = sum(sum(images, dims=2)[Int((size(imag
 function compute_measurements(images::Array; meas_type::MeasurementType = LeftRight())
     one_half = first_half(meas_type, images)
     other_half = second_half(meas_type, images)    
-    x = vec(one_half .- other_half)
-    print(x)
-    println(std(x), mean(x))
+    x = vec(one_half .- other_half)    
     # Normalize
     x = (1/std(x)) .* (x .- mean(x))
     return x
 end
 
-# Create test set containing the images and labels of two letters
+"""
+    create_work_set(alphabet::Array, images::Array, labels::Vector; letters::String = "CN")
+
+From the dataset with `images` containing all letters from `alphabet` only choose the images of the `letters`
+specified.
+"""
 function create_work_set(alphabet::Array, images::Array, labels::Vector; letters::String = "CN")
     m,n = size(images)
     letter_counts = []
@@ -46,7 +49,11 @@ function create_work_set(alphabet::Array, images::Array, labels::Vector; letters
     return imgs, lbls, letter_counts
 end
 
-# Split the data into a train and test set
+"""
+    crossval(imgs::Array, lbls::Vector, letter_count::Vector)
+
+The subset of `imgs` to work with is split into two parts - one is used for learning and one for testing.
+"""
 function crossval(imgs::Array, lbls::Vector, letter_count::Vector)
     m,n = size(imgs)
     imgs_tst, imgs_trn = Array{UInt8}(undef, m*n, 0), Array{UInt8}(undef, m*n, 0)

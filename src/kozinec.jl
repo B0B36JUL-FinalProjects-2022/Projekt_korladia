@@ -18,6 +18,13 @@ function get_k(a::Vector, x::Vector)
     return res
 end
 
+"""
+    kozinec(X::Matrix, y::Vector; alg::Algorithm = Kozinec(), max_iter::Int = 2000)
+
+Implements the Kozinec algorithm which is a variation of the perceptron algorithm. Produces a vector
+of values which form the dividing hyperplane. Depending on the value of `alg` either the Kozinec
+variation of the algorithm is used or the original perceptron.
+"""
 function kozinec(X::Matrix, y::Vector; alg::Algorithm = Kozinec(), max_iter::Int = 2000)
     X_my = copy(X')
     iter = copy(max_iter)

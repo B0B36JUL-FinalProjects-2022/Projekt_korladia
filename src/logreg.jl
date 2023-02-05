@@ -21,6 +21,12 @@ function logistic_loss_gradient(X::Matrix, y::Vector, w::Vector)
     return g
 end
 
+"""
+    logistic_loss_gradient_descent(X::Matrix, y::Vector, w_init::Vector; eps::Real = 1e-2, step_size::Float64 = 1.0, max_iter::Int = 300)
+
+Performs gradient descent optimization of the logistic loss function - the logistic regression problem is 
+thus solved as an optimization one where the goal is to minimize the loss. The starting point is `w_init`.
+"""
 function logistic_loss_gradient_descent(X::Matrix, y::Vector, w_init::Vector; eps::Real = 1e-2, step_size::Float64 = 1.0, max_iter::Int = 300)
     n = length(w_init)
     iter = copy(max_iter)
