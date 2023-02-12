@@ -1,5 +1,6 @@
 using LinearAlgebra
 export logistic_loss, logistic_loss_gradient, logistic_loss_gradient_descent
+export dimension_lifting, posteriori, Lifting, Arctan, SinCos
 # Logistic regression loss
 function logistic_loss(X::Matrix, y::Vector, w::Vector)
     n = size(X)[2]
@@ -52,4 +53,43 @@ function logistic_loss_gradient_descent(X::Matrix, y::Vector, w_init::Vector; ep
         iter -= 1
     end
     return w, wt', Et
+end
+
+abstract type Lifting end
+
+struct Arctan <: Lifting end
+struct SinCos <: Lifting end
+
+function lift(::Arctan, a::Float64, a_ones::Vector, a_zeros::Vector)
+    res = atan.(a.*a_ones + (a_zeros.-15))
+    # res = atan.(a.*a_ones + a_zeros)
+    res = append!(res,1)
+    return res
+end
+
+function lift(::SinCos, a::Float64, a_ones::Vector, a_zeros::Vector)
+    els = [sin(a/2), cos(a), sin(a)^2 + cos(a)]
+    res = a_ones.*els + a_zeros
+    res = append!(res,1)
+    return res
+end
+
+function dimension_lifting(x::Vector; dims::Int = 3, lifter = SinCos())
+    indices = sortperm(x)
+    x_n = copy(x)[indices]
+    # alpha_zeros = range(-1*dims,-1,step=1) |> collect
+    alpha_zeros = range(1, 4*dims,step=4) |> collect
+    # alpha_zeros = range(1, dims,step=1) |> collect
+    alpha_ones = ones(dims).*(dims÷ 2)
+    # alpha_ones = ones(dims).*alpha_zeros
+    res = map((el)->lift(lifter, el, alpha_ones, alpha_zeros), x_n)
+    return(res)
+end
+
+function get_posteriori(a::Float64)
+    return 1/(1+exp(a))
+end
+
+function posteriori(v::Vector)
+    return map((el)->get_posteriori(el), v)
 end
