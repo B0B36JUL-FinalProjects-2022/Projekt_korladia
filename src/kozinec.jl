@@ -54,7 +54,8 @@ function kozinec(X::Matrix, y::Vector; alg::Algorithm = Kozinec(), max_iter::Int
         iter -= 1
     end
     if iter == 0
-        alpha = Nothing
+        throw(ErrorException("Not enough iterations. The data might be inseparable."))
+        return
     end
     return alpha
 end
