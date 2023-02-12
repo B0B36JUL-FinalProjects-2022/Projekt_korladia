@@ -41,10 +41,11 @@ separ2(x::Real, alpha) = -alpha[2]-alpha[1]*x
 
 # Create plot
 function create_plot(x::Vector, alpha::Vector, dim_num::Int64, title::String)
-    x1 = x[1:size(x)[1]÷2]
-    x2 = x[size(x)[1]÷2+1:end]
-    p = plot(x1,zeros(15),seriestype=:scatter, color=:pink, title=title)
-    p = plot(p, x2,zeros(15),seriestype=:scatter, color=:purple)
+    n = size(x)[1]÷2
+    x1 = x[1:n]
+    x2 = x[n+1:end]
+    p = plot(x1,zeros(n),seriestype=:scatter, color=:pink, title=title)
+    p = plot(p, x2,zeros(n),seriestype=:scatter, color=:purple)
     xlims = extrema(x) .+ [-0.1, 0.1]
     if dim_num == 3
         p = plot(p,xlims, x -> separ3(x,alpha); label = "Separation", line = (:black,3))
