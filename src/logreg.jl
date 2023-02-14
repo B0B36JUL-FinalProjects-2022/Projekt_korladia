@@ -1,6 +1,7 @@
 using LinearAlgebra
 export logistic_loss, logistic_loss_gradient, logistic_loss_gradient_descent
 export dimension_lifting, posteriori, Lifting, Arctan, SinCos
+
 # Logistic regression loss
 function logistic_loss(X::Matrix, y::Vector, w::Vector)
     n = size(X)[2]
