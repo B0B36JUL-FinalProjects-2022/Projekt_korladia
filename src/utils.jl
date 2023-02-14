@@ -1,6 +1,7 @@
 using NPZ
 using Plots
-export get_data, classification, compute_error, create_plot
+export Approach, Logreg, Kznc
+export get_data, classification, compute_error, create_plot, test_train_plot
 
 # Load data
 function get_data(path::String)
@@ -12,14 +13,19 @@ function get_data(path::String)
     return Int.(labels), Int.(images)
 end
 
+abstract type Approach end
+
+struct Logreg <: Approach end
+struct Kznc <: Approach end
+
+classif(::Logreg, X::Matrix, w::Vector) = collect(w'*X) 
+classif(::Kznc, X::Matrix, w::Vector) = sum(X' * w, dims = 2)
+
 # Produce labels for each image
-function classification(X::Matrix, w::Vector, approach::String)
-    if approach == "logreg"
-        a = collect(w'*X) 
-        lbls = vec([ifelse(el>0,1,-1) for el in a])
-    elseif approach == "kozinec"
-        summ = sum(X' * w, dims = 2)
-        lbls = vec([ifelse(el>0,1,-1) for el in summ])
+function classification(X::Matrix, w::Vector, approach::Approach)
+    if typeof(approach) <: Approach
+        class = classif(approach, X, w)
+        lbls = vec([ifelse(el>0,1,-1) for el in class])
     else
         throw(ArgumentError("Please enter a valid classification approach."))
         return
@@ -33,6 +39,20 @@ function compute_error(lbls::Vector, true_lbls::Vector)
     diff = findall(a->a != 0, d)
     err = size(diff)[1]/size(lbls)[1]
     return err
+end
+
+# Show the train and test set points separately
+function test_train_plot(x_trn::Vector, x_tst::Vector)
+    x1 = x_trn[1:size(x_trn)[1]÷2]
+    x2 = x_trn[size(x_trn)[1]÷2+1:end]
+    x3 = x_tst[1:size(x_tst)[1]÷2]
+    x4 = x_tst[size(x_tst)[1]÷2+1:end]
+    p1 = plot(x1,zeros(size(x_trn)[1]÷2),seriestype=:scatter, color=:pink, title="Train data", size=(900,400))
+    p1 = plot(p1, x2,zeros(size(x_trn)[1]÷2),seriestype=:scatter, color=:purple)
+    p2 = plot(x3,zeros(size(x_tst)[1]÷2),seriestype=:scatter, color=:pink, title="Test data", size=(900,400))
+    p2 = plot(p2, x4,zeros(size(x_tst)[1]÷2),seriestype=:scatter, color=:purple)
+    p = plot(p1, p2,layout=(1,2), legend=false)
+    return p
 end
 
 # Create separation line
@@ -56,3 +76,4 @@ function create_plot(x::Vector, alpha::Vector, dim_num::Int64, title::String)
     end
     return p
 end
+
