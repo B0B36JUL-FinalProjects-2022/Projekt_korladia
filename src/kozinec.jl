@@ -33,11 +33,9 @@ function kozinec(X::Matrix, y::Vector; alg::Algorithm = Kozinec(), max_iter::Int
     for i in indices
         X_my[i, :] *= -1        
     end
-    alpha = X_my[1, :]  
-    hey = 0 
+    alpha = X_my[1, :]
     while iter > 0
-        okays = 0
-        hey+=1
+        okays = 0       
         dots = sum(alpha' .* X_my, dims = 2)        
         # Find the first wrongly classified vector - the dot product is negative
         idx = findfirst(a->a <= 0, dots)  
