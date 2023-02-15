@@ -12,13 +12,12 @@ end
     y2 = [-1, -1, -1, 1,1]
     X3 = [1 0 2; 0 1 1; 1 1 1]
     y3 = [-1, -1, 1]
-    res_1 = [3.0, 1.0, 1.0]
-    res_2 = Nothing
-    res_3 = [1.0, 1.0, -2.0]
+    res_1 = [3.0, 1.0, 1.0]    
+    res_3 = [1, 1, -2]
     @test kozinec(X1,y1) == res_1
-    @test kozinec(X2,y2) == res_2
+    @test_throws ErrorException kozinec(X2,y2)
     @test kozinec(X1,y1,alg=Perceptron()) == res_1
-    @test kozinec(X2,y2,alg=Perceptron()) == res_2
+    @test_throws ErrorException kozinec(X2,y2,alg=Perceptron())
     @test kozinec(X3,y3,alg=Perceptron()) == res_3
      
 end
@@ -29,8 +28,15 @@ end
     w = [1.5, -0.5]
     loss = 0.6601619507527583
     loss_g = reshape([0.28450596994395316, 0.8253257470112381],2,1)
+    method = SinCos()
+    a = 0.0
+    a_ones = ones(3)
+    a_zeros = zeros(3)
+    res = [0.0, 1.0, -1.0, 1.0]
     @test logistic_loss(X,l,w) == loss
     @test logistic_loss_gradient(X,l,w) == loss_g
+    @test lift(method, a, a_ones, a_zeros) == res
+    @test posteriori([a]) == [0.5]
 end
 
 @testset "data_prep.jl" begin
