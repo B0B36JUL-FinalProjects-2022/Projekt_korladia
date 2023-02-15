@@ -97,12 +97,3 @@ res_lbl2 = classification(X_tst_1, v, "kozinec")
 println(lbls_tst)
 println(res_lbl2)
 err2 = compute_error(res_lbl2, lbls_tst)
-
-# X1 = [1 1.5 2 ; 1 0 1]
-# lbls1 = ones(size(X1)[2])
-# X2 = [-3 -2 ; 0 -1]
-# lbls2 = ones(size(X2)[2])*2
-# X3 = [-2 -1.5 ; 4 5.5]
-# lbls3 = ones(size(X3)[2])*3
-# X = hcat(X1,X2,X3)
-# y = hcat(lbls1', lbls2', lbls3')
