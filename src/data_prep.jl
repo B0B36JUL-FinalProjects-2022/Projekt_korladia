@@ -93,6 +93,12 @@ function add_padding(M::Matrix; position::String = "under")
     end
 end
 
+"""
+    prep_data(imgs::Array, lbls::Vector)
+
+Returns input data and labels ready for binary classification - labels are converted to 1 and -1, the data
+consists of features and is already padded to make allowance for the bias.
+"""
 function prep_data(imgs::Array, lbls::Vector)
     # Create image features
     method1 = LeftRight()

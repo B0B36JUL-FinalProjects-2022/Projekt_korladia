@@ -1,6 +1,6 @@
 using LinearAlgebra
 export logistic_loss, logistic_loss_gradient, logistic_loss_gradient_descent
-export dimension_lifting, posteriori, Lifting, Arctan, SinCos
+export dimension_lifting, lift, posteriori, Lifting, Arctan, SinCos
 
 # Logistic regression loss
 function logistic_loss(X::Matrix, y::Vector, w::Vector)
@@ -69,20 +69,24 @@ function lift(::Arctan, a::Float64, a_ones::Vector, a_zeros::Vector)
 end
 
 function lift(::SinCos, a::Float64, a_ones::Vector, a_zeros::Vector)
-    els = [sin(a/2), cos(a), sin(a)^2 + cos(a)]
+    els = [sin(a/2), cos(a), sin(a)^2 - cos(a)]
     res = a_ones.*els + a_zeros
     res = append!(res,1)
     return res
 end
 
+"""
+    dimension_lifting(x::Vector; dims::Int = 3, lifter = SinCos())
+
+Inseparable data can be oftentimes helped by dimension lifting which translates the data into
+a higher dimension space.
+"""
+
 function dimension_lifting(x::Vector; dims::Int = 3, lifter = SinCos())
     indices = sortperm(x)
     x_n = copy(x)[indices]
-    # alpha_zeros = range(-1*dims,-1,step=1) |> collect
     alpha_zeros = range(1, 4*dims,step=4) |> collect
-    # alpha_zeros = range(1, dims,step=1) |> collect
     alpha_ones = ones(dims).*(dims÷ 2)
-    # alpha_ones = ones(dims).*alpha_zeros
     res = map((el)->lift(lifter, el, alpha_ones, alpha_zeros), x_n)
     return(res)
 end
