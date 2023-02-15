@@ -15,7 +15,7 @@ Optical character recognition - binary classification of images, in this case of
 ## Data
 A dataset containing 20 letters as 10 x 10 pixel image chips (30 images per letter).
 <p align="left">
- <img src="pics/jul.png"/>
+ <img src="pics/jul.png" width=500 height=380/>
 </p>
 
 ## Classification Methods
@@ -27,7 +27,7 @@ A dataset containing 20 letters as 10 x 10 pixel image chips (30 images per lett
 - Classification error (when compared to the actual labels) 
 - Image representation of the classification
 <p align="left">
- <img src="pics/class_CZ.png"/>
+ <img src="pics/class_CZ.png" width=600 height=480/>
 </p>
 
 ## Inseparable data
