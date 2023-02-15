@@ -1,6 +1,6 @@
 using NPZ
 using Statistics
-export compute_measurements, create_work_set, crossval, flip_lbls, add_padding
+export compute_measurements, create_work_set, crossval, flip_lbls, add_padding, prep_data
 export MeasurementType, LeftRight, TopBottom
 
 abstract type MeasurementType end
@@ -34,10 +34,12 @@ function create_work_set(alphabet::Array, images::Array, labels::Vector; letters
     letter_counts = []
     imgs = Array{UInt8}(undef, m*n, 0)
     lbls = []
+    indices = []
     for i in eachindex(letters)
         letter = letters[i]        
         # Labels start from zero        
-        indx = sum([ifelse(alphabet[j]==letter, j, 0) for j in 1:size(alphabet)[1]])-1      
+        indx = sum([ifelse(alphabet[j]==letter, j, 0) for j in 1:size(alphabet)[1]])-1   
+        indices = append!(indices, indx)   
         res = images[:,:,labels .== indx]
         num = length(res)÷(m*n)
         imgs = hcat(imgs,reshape(res, (m*n, num)))
@@ -46,7 +48,7 @@ function create_work_set(alphabet::Array, images::Array, labels::Vector; letters
         lbls = append!(lbls, ones(UInt8,length(lbl))*i)
     end
     imgs = reshape(imgs, (m,n,length(imgs)÷(m*n)))
-    return imgs, lbls, letter_counts
+    return imgs, lbls, letter_counts, indices
 end
 
 """
@@ -89,4 +91,20 @@ function add_padding(M::Matrix; position::String = "under")
         throw(ArgumentError("The padding can be added either under or over the matrix"))
         return
     end
+end
+
+function prep_data(imgs::Array, lbls::Vector)
+    # Create image features
+    method1 = LeftRight()
+    method2 = TopBottom()
+    x_n = compute_measurements(imgs, meas_type = method1)
+    y_n = compute_measurements(imgs, meas_type = method2)
+    # Create matrices of all the measurments
+    X_n_1 = reshape(x_n, 1, size(x_n)[1])
+    X_n_2 = vcat(x_n',y_n')
+    # Prepare the data
+    X_n_1 = add_padding(X_n_1)
+    X_n_2 = add_padding(X_n_2)
+    lbls_n = flip_lbls(lbls)
+    return x_n, X_n_1, X_n_2, lbls_n
 end
